@@ -1,0 +1,136 @@
+{
+  "groups": [
+    {
+      "name": "inCamp Winter S8",
+      "periodStart": "2018-03-15",
+      "periodFinish": "2018-05-28",
+      "id": 3
+    },
+    {
+      "name": "Team A",
+      "periodStart": "2018-03-15",
+      "periodFinish": "2018-03-17",
+      "id": 4
+    }
+  ],
+  "questions": [
+    {
+      "id": 0,
+      "questionText": "Which of these elements are inline by default?",
+      "questionType": "multiOption",
+      "options": [
+        {
+          "id": 0,
+          "optionText": "blockquote"
+        },
+        {
+          "id": 1,
+          "optionText": "strong",
+          "isCorrect": true
+        },
+        {
+          "id": 2,
+          "optionText": "section"
+        },
+        {
+          "id": 3,
+          "optionText": "em",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "questionText": "What display behavior should be set for element to take the whole width?",
+      "questionType": "singleOption",
+      "options": [
+        {
+          "id": 0,
+          "optionText": "inline"
+        },
+        {
+          "id": 1,
+          "optionText": "block",
+          "isCorrect": true
+        },
+        {
+          "id": 2,
+          "optionText": "inline-block"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Html/css",
+      "deadline": "2018-03-15",
+      "attachments": [
+        {
+          "name": "basics",
+          "link": "https://marksheet.io/",
+          "img": "img/basics.png",
+          "type": "homework"
+        }
+      ],
+      "tests": [
+        {
+          "img": "img/test.png",
+          "name": "test1",
+          "link": "#"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "name": "SSAS",
+      "questions": [
+        "Question 1",
+        "Question 3",
+        "Question 1"
+      ],
+      "id": 1
+    },
+    {
+      "name": "CSS",
+      "questions": [
+        "Question 2",
+        "Question 3",
+        "Question 1"
+      ],
+      "id": 2
+    }
+  ],
+  "interns": [
+    {
+      "id": 1,
+      "firstName": "Vadym",
+      "lastName": "Kukurika",
+      "email": "vadymku@interlunk-ua.com",
+      "groupId": 3
+    },
+    {
+      "id": 2,
+      "firstName": "Dmytro",
+      "lastName": "Zakharchenko",
+      "email": "dmytroza",
+      "groupId": 3
+    },
+    {
+      "id": 3,
+      "firstName": "Maksym",
+      "lastName": "Tokar",
+      "email": "MaksymTo",
+      "groupId": 3
+    }
+  ],
+  "weeks": [
+    {
+      "weekNumber": "21321",
+      "topic": "ewfsds",
+      "description": "gsgsgs",
+      "id": 1
+    }
+  ]
+}
