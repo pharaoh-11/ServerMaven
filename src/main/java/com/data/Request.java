@@ -1,20 +1,35 @@
-package com.server;
+package com.data;
 
+import com.server.RequestMethods;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class Request {
-    RequestMethods method;
-    String path;
-    String query;
-    Map<String, String> header;
-    String body;
+    private RequestMethods method;
+    private String path;
+    private String query;
+    private Map<String, String> header;
+    private String body;
+
+    public Request() {
+        header = new HashMap<>();
+    }
 
     public void setMethod(RequestMethods method) {
         this.method = method;
     }
 
+    public RequestMethods getMethod() {
+        return method;
+    }
+
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public void setQuery(String query) {

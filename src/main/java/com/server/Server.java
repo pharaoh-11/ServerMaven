@@ -1,12 +1,11 @@
 package com.server;
 
+import com.data.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Server {
     private static final int PORT = 8080;
@@ -15,40 +14,35 @@ public class Server {
     private ServerSocket serverSocket;
     private ObjectMapper objectMapper;
     private Request request;
+    private Dispatcher dispatcher;
 
-    public Server() {
+    public Server(Router router) {
         try {
             serverSocket = new ServerSocket(PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
         objectMapper = new ObjectMapper();
+        dispatcher = new Dispatcher(router);
     }
 
     public void listenPort() {
         while(true) {
-
-
             try {
                 Socket client = serverSocket.accept();
 
-                Parser.parseRequest(client);
+                request = Parser.parseRequest(client);
 
+                System.out.println(request);
+                dispatcher.handleRequest(request);
 
 
                 client.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    /*public void close() {
-        out.close();
-                in.close();
-                client.close();
-    }*/
 }
 
 
