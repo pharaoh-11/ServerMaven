@@ -1,10 +1,12 @@
 package com.server;
 
+import java.util.Map;
+
 public class Request {
     RequestMethods method;
     String path;
     String query;
-    String header;
+    Map<String, String> header;
     String body;
 
     public void setMethod(RequestMethods method) {
@@ -19,7 +21,7 @@ public class Request {
         this.query = query;
     }
 
-    public void setHeader(String header) {
+    public void setHeader(Map<String, String> header) {
         this.header = header;
     }
 
@@ -27,5 +29,18 @@ public class Request {
         this.body = body;
     }
 
+    public Map<String, String> getHeader() {
+        return header;
+    }
 
+    @Override
+    public String toString() {
+        return "Request{" +
+                "method=" + method +
+                ", path='" + path + '\'' +
+                ", query='" + query + '\'' +
+                ", header=" + header +
+                ", body='" + body + '\'' +
+                '}';
+    }
 }

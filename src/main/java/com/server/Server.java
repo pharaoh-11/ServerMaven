@@ -27,24 +27,28 @@ public class Server {
 
     public void listenPort() {
         while(true) {
+
+
             try {
                 Socket client = serverSocket.accept();
-                BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                PrintWriter out = new PrintWriter(client.getOutputStream());
 
-                String queryLine;
-                LinkedList<String> queryStrings = new LinkedList<>();
-                while ((queryLine = in.readLine()) != null) {
-                    queryStrings.add(queryLine);
-                }
+                Parser.parseRequest(client);
 
-                request = Parser.parseRequest(queryStrings);
+
+
+                client.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    /*public void close() {
+        out.close();
+                in.close();
+                client.close();
+    }*/
 }
 
 
