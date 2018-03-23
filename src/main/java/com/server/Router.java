@@ -5,22 +5,20 @@ import com.handlers.ConcreteHandler;
 import com.handlers.Handler;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Router {
+    Map<RequestMethods, LinkedList<ConcreteHandler>> handlers;
     LinkedList<ConcreteHandler> getHandlers;
-    LinkedList<ConcreteHandler> putHandlers;
     LinkedList<ConcreteHandler> postHandlers;
     LinkedList<ConcreteHandler> patchHandlers;
     LinkedList<ConcreteHandler> deleteHandlers;
-    LinkedList<ConcreteHandler> headHandlers;
 
     public Router() {
         this.getHandlers = new LinkedList<>();
-        this.putHandlers = new LinkedList<>();
         this.postHandlers = new LinkedList<>();
         this.patchHandlers = new LinkedList<>();
         this.deleteHandlers = new LinkedList<>();
-        this.headHandlers = new LinkedList<>();
     }
 
     public void addNewHandler(RequestMethods method, String path, Handler handler) {
@@ -28,28 +26,17 @@ public class Router {
             case GET:
                 getHandlers.add(new ConcreteHandler(method, path, handler));
                 break;
-            case PUT:
             case POST:
             case PATCH:
             case DELETE:
-            case HEAD:
         }
     }
 
     public ConcreteHandler findNeededHandler(Request request) {
-
-
         switch(request.getMethod()) {
             case GET:
                 for(ConcreteHandler handler: getHandlers) {
                     if(handler.getPath().equals(makeCorrespondPathToCheck(request.getPath()))) {
-                        return handler;
-                    }
-                }
-                break;
-            case PUT:
-                for(ConcreteHandler handler: putHandlers) {
-                    if(handler.getPath().equals(request.getPath())){
                         return handler;
                     }
                 }
@@ -75,12 +62,6 @@ public class Router {
             }
 
                 break;
-            case HEAD:
-                for(ConcreteHandler handler: headHandlers) {
-                    if(handler.getPath().equals(request.getPath())){
-                        return handler;
-                    }
-                }
         }
         //not found concreteHandler
         throw new IllegalArgumentException();
