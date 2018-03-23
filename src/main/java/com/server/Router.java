@@ -37,10 +37,12 @@ public class Router {
     }
 
     public ConcreteHandler findNeededHandler(Request request) {
+
+
         switch(request.getMethod()) {
             case GET:
                 for(ConcreteHandler handler: getHandlers) {
-                    if(handler.getPath().equals(request.getPath())){
+                    if(handler.getPath().equals(makeCorrespondPathToCheck(request.getPath()))) {
                         return handler;
                     }
                 }
@@ -82,5 +84,9 @@ public class Router {
         }
         //not found concreteHandler
         throw new IllegalArgumentException();
+    }
+
+    private String makeCorrespondPathToCheck(String path) {
+        return path.replaceAll("/\\d*/", "/id/");
     }
 }

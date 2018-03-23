@@ -36,10 +36,6 @@ public class Request {
         this.query = query;
     }
 
-    public void setHeader(Map<String, String> header) {
-        this.header = header;
-    }
-
     public void setBody(String body) {
         this.body = body;
     }

@@ -1,5 +1,6 @@
 package com.handlers;
 
+import com.data.Response;
 import com.server.RequestMethods;
 
 public class ConcreteHandler {
@@ -15,5 +16,11 @@ public class ConcreteHandler {
 
     public String getPath() {
         return path;
+    }
+
+    public Response handleQuery() {
+        handler.getResponse();
+
+        return handler.getResponse();
     }
 }

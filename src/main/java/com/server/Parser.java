@@ -3,17 +3,13 @@ package com.server;
 import com.data.Request;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 
 public class Parser {
 
     private static Request request;
 
-    public static Request parseRequest(Socket client) {
+    public static Request parseRequest(BufferedReader in) {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
             request = new Request();
             String queryLine;
             parseFirstLine(in.readLine(), request);
@@ -22,8 +18,6 @@ public class Parser {
                 parseHead(queryLine, request);
             }
             parseBody(in);
-
-            in.close();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -36,11 +30,20 @@ public class Parser {
 
         String path = firstString.split(" ")[1];
         if(path.indexOf('?') < 0) {
-            request.setPath(path);
+            request.setPath(addSlashToEnding(path));
         } else {
             String [] pathAndQuery = path.split("\\?");
-            request.setPath(pathAndQuery[0]);
+            request.setPath(addSlashToEnding(pathAndQuery[0]));
             request.setQuery(pathAndQuery[1]);
+        }
+    }
+
+    private static String addSlashToEnding(String path) {
+        if(path.charAt(path.length() - 1) != '/') {
+            return path + "/";
+        }
+        else {
+            return path;
         }
     }
 
@@ -56,6 +59,5 @@ public class Parser {
             in.read(body, 0, body.length);
             request.setBody(new String(body));
         }
-
     }
 }

@@ -9,7 +9,6 @@ import java.net.Socket;
 
 public class Server {
     private static final int PORT = 8080;
-    private static final File JSON_FILE = new File("/home/intern/IdeaProjects/Server/src/main/resources/db.json");
 
     private ServerSocket serverSocket;
     private ObjectMapper objectMapper;
@@ -19,25 +18,21 @@ public class Server {
     public Server(Router router) {
         try {
             serverSocket = new ServerSocket(PORT);
+            objectMapper = new ObjectMapper();
+            dispatcher = new Dispatcher(router);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        objectMapper = new ObjectMapper();
-        dispatcher = new Dispatcher(router);
     }
 
     public void listenPort() {
         while(true) {
-            try {
-                Socket client = serverSocket.accept();
+            try (Socket client = serverSocket.accept();
+                 BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                 PrintWriter out = new PrintWriter(client.getOutputStream())) {
 
-                request = Parser.parseRequest(client);
-
-                System.out.println(request);
-                dispatcher.handleRequest(request);
-
-
-                client.close();
+                request = Parser.parseRequest(in);
+                out.print(dispatcher.handleRequest(request));
             } catch (IOException e) {
                 e.printStackTrace();
             }

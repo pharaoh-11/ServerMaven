@@ -1,8 +1,8 @@
 package com.server;
 
 import com.data.Request;
+import com.data.Response;
 import com.handlers.ConcreteHandler;
-import com.handlers.Handler;
 
 public class Dispatcher {
     private Router router;
@@ -11,7 +11,9 @@ public class Dispatcher {
         this.router = router;
     }
 
-    public void handleRequest(Request request) {
+    public Response handleRequest(Request request) {
         ConcreteHandler concreteHandler = router.findNeededHandler(request);
+        Response response = concreteHandler.handleQuery();
+        return response;
     }
 }
