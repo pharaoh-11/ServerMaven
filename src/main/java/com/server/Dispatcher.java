@@ -13,7 +13,7 @@ public class Dispatcher {
 
     public Response handleRequest(Request request) {
         ConcreteHandler concreteHandler = router.findNeededHandler(request);
-        Response response = concreteHandler.handleQuery();
+        Response response = concreteHandler.handleQuery(request);
         return response;
     }
 }

@@ -39,7 +39,7 @@ public class Main {
                 interns[i].setGroupId(Integer.parseInt(jNode.get(i).get("groupId").toString()));
             }
             response.setHead(responseHead);
-            response.setEntity(interns);
+            response.setEntity(interns.toString());
             return response;});
         router.addNewHandler(RequestMethods.GET, "/interns/id/",(request) -> {
             Response response = new Response();
@@ -55,7 +55,6 @@ public class Main {
 
                 String[] requestParts = request.getPath().split("/");
                 int id =  Integer.parseInt(requestParts[2].split(" ")[0]);
-//                int id = QueryParser.getId(line);
                         int i;
                         for (i = 0; i < jNode.size(); i++) {
                             if (Integer.parseInt(jNode.get(i).get("id").toString()) == id) {
@@ -74,7 +73,7 @@ public class Main {
                             intern.setGroupId(Integer.parseInt(jNode.get(i).get("groupId").toString()));
                         }
             response.setHead(responseHead);
-            response.setEntity(intern);
+            response.setEntity(intern.toString());
 
             } catch (IOException e) {
                 e.printStackTrace();

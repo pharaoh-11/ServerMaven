@@ -1,5 +1,6 @@
 package com.handlers;
 
+import com.data.Request;
 import com.data.Response;
 import com.server.RequestMethods;
 
@@ -18,9 +19,7 @@ public class ConcreteHandler {
         return path;
     }
 
-    public Response handleQuery() {
-        handler.getResponse();
-
-        return handler.getResponse();
+    public Response handleQuery(Request request) {
+        return handler.getResponse(request);
     }
 }
