@@ -27,11 +27,11 @@ public class Server {
 
     public void listenPort() {
         while(true) {
+            System.out.println("Listening port 8080:");
             try (Socket client = serverSocket.accept();
                  BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                  PrintWriter out = new PrintWriter(client.getOutputStream())) {
 
-                out.print("Listening port 8080:");
                 request = Parser.parseRequest(in);
                 out.print(dispatcher.handleRequest(request));
             } catch (IOException e) {

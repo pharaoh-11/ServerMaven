@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class Main {
     private static final String RESPONSE_200 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\n";
-    private static final File JSON_FILE = new File("/home/intern/IdeaProjects/Server/src/main/resources/db.json");
+    private static final File JSON_FILE = new File("./src/main/resources/db.json");
     private static final String INTERNS = "interns";
 
     public static void main(String[] args) {
