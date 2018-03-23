@@ -17,6 +17,13 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -27,4 +34,5 @@
             <version>2.9.4</version>
         </dependency>
     </dependencies>
+
 </project>
