@@ -31,6 +31,7 @@ public class Server {
                  BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                  PrintWriter out = new PrintWriter(client.getOutputStream())) {
 
+                out.print("Listening port 8080:");
                 request = Parser.parseRequest(in);
                 out.print(dispatcher.handleRequest(request));
             } catch (IOException e) {
