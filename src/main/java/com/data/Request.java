@@ -40,6 +40,10 @@ public class Request {
         this.body = body;
     }
 
+    public String getBody() {
+        return body;
+    }
+
     public Map<String, String> getHeader() {
         return header;
     }

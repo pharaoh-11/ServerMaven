@@ -9,9 +9,11 @@ public class Main {
 
     public static void main(String[] args) {
         Router router = new Router();
-        router.addNewHandler(RequestMethods.GET, "/interns/", MethodsForLambda::GetInternWithoutId);
-        router.addNewHandler(RequestMethods.GET, "/interns/id/", MethodsForLambda::GetInternWithId);
-        router.addNewHandler(RequestMethods.GET, "/groups/", MethodsForLambda::GetGroups);
+        router.addNewHandler(RequestMethods.GET, "/interns/", MethodsForLambda::getInternWithoutId);
+        router.addNewHandler(RequestMethods.GET, "/interns/id/", MethodsForLambda::getInternWithId);
+        router.addNewHandler(RequestMethods.GET, "/groups/", MethodsForLambda::getGroups);
+        router.addNewHandler(RequestMethods.POST, "/interns/", MethodsForLambda::postNewIntern);
+        router.addNewHandler(RequestMethods.OPTIONS, "/interns/", MethodsForLambda::options);
 
         Server server = new Server(router);
         server.listenPort();

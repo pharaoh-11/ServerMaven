@@ -1,7 +1,7 @@
 package com.server;
 
 public enum RequestMethods {
-    GET, POST, DELETE, PATCH;
+    GET, POST, DELETE, PATCH, OPTIONS;
 
     public static RequestMethods checkMethods(String method) throws IllegalArgumentException {
         for(RequestMethods rm: RequestMethods.values()){

@@ -11,14 +11,12 @@ public class Server {
     private static final int PORT = 8080;
 
     private ServerSocket serverSocket;
-    private ObjectMapper objectMapper;
     private Request request;
     private Dispatcher dispatcher;
 
     public Server(Router router) {
         try {
             serverSocket = new ServerSocket(PORT);
-            objectMapper = new ObjectMapper();
             dispatcher = new Dispatcher(router);
         } catch (IOException e) {
             e.printStackTrace();
