@@ -14,13 +14,13 @@ public class Parser {
             String queryLine;
             parseFirstLine(in.readLine(), request);
             while (!(queryLine = in.readLine()).isEmpty()) {
-                System.out.println(queryLine);
                 parseHead(queryLine, request);
             }
             parseBody(in);
         } catch(Exception e) {
             e.printStackTrace();
         }
+        System.out.println(request);
         return request;
     }
 
@@ -53,10 +53,11 @@ public class Parser {
     }
 
     private static void parseBody(BufferedReader in) throws IOException {
-        String contentLength = request.getHeader().get("content-length");
+        String contentLength = request.getHeader().get("Content-Length");
         if(contentLength != null) {
-            char[] body = new char[Integer.parseInt(contentLength.substring(1))];
+            char[] body = new char[Integer.parseInt(contentLength)];
             in.read(body, 0, body.length);
+            System.out.println(new String(body));
             request.setBody(new String(body));
         }
     }

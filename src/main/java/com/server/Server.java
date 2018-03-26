@@ -1,6 +1,7 @@
 package com.server;
 
 import com.data.Request;
+import com.entity.DBIntern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
@@ -13,11 +14,13 @@ public class Server {
     private ServerSocket serverSocket;
     private Request request;
     private Dispatcher dispatcher;
+    private DBIntern dBIntern;
 
     public Server(Router router) {
         try {
             serverSocket = new ServerSocket(PORT);
             dispatcher = new Dispatcher(router);
+            dBIntern = new DBIntern();
         } catch (IOException e) {
             e.printStackTrace();
         }

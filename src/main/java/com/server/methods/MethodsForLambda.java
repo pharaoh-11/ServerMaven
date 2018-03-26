@@ -6,17 +6,23 @@ import com.entity.Intern;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.omg.CORBA.Object;
 
+import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 
 public class MethodsForLambda {
     private static final String RESPONSE_200 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
     private static final String RESPONSE_201 = "HTTP/1.1 201 OK\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
-    private static final String RESPONSE_FOR_OPTIONS = "HTTP/1.0 200 OK\n" +
-            "Content-Type: text/html; charset=utf-8\n" +
-            "Allow: GET, OPTIONS, POST";
+    private static final String RESPONSE_FOR_OPTIONS = "HTTP/1.1 204 No Content\r\n"+
+            "Access-Control-Allow-Credentials: true\r\n"+
+            "Access-Control-Allow-Headers: Content-Type\r\n"+
+            "Access-Control-Allow-Methods: GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS\r\n" +
+            "Access-Control-Allow-Origin: * \r\n";
+
     private static final File JSON_FILE = new File("./src/main/resources/db.json");
     private static final String INTERNS = "interns";
     private static final String GROUPS = "groups";
@@ -107,20 +113,35 @@ public class MethodsForLambda {
     public static Response postNewIntern(Request request) {
         Response response = new Response();
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jNode;
+//        ObjectWriter writer = new ObjectWriter(mapper, Seria);
+        JsonNode jNode = null;
 
 
         String responseHead = RESPONSE_201;//if data was written
 
         System.out.println(request);
         Intern intern = new Intern();
-        String acceptEncoding = request.getBody();
+        String body = request.getBody();
         System.out.println("Bottom body");
-        System.out.println(acceptEncoding);
-        String[] fields = acceptEncoding.split(" ");
+        System.out.println(body);
+        String[] fields = body.split(",");
         System.out.println(fields);
-
-
+        response.setHead(responseHead);
+        try {
+            jNode = mapper.readTree(body);
+//            mapper.writeTree();mapper.valueToTree(jNode);
+//            jNode = mapper.readTree(JSON_FILE);
+//            jNode = jNode.withArray(GROUPS);
+            ObjectWriter writer = mapper.writer();
+            writer = writer.withRootName("interns");
+//            writer.writeValue(JSON_FILE, jNode);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(JSON_FILE, jNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+        System.out.println();
+        System.out.println(jNode);
 
 //        try {
 //            jNode = mapper.readTree(JSON_FILE);
@@ -150,7 +171,11 @@ public class MethodsForLambda {
 
     public static Response options(Request request) {
         Response response = new Response();
-        response.setHead(RESPONSE_FOR_OPTIONS);
+        String responseForOptions = RESPONSE_FOR_OPTIONS;
+        responseForOptions = responseForOptions +
+            "Connection: keep-alive\r\n"+
+                "Vary: Origin, Access-Control-Request-Headers\n\r\n\r";
+        response.setHead(responseForOptions);
         return response;
     }
 }

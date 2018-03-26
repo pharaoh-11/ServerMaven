@@ -2,8 +2,8 @@ package com.entity;
 
 public class Intern {
     private int id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
     private int groupId;
 
@@ -11,12 +11,12 @@ public class Intern {
         this.id = id;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public void setEmail(String email) {
@@ -27,12 +27,32 @@ public class Intern {
         this.groupId = groupId;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
     @Override
     public String toString() {
         return "{\n" +
                 " id=" + id +
-                "\n firstname=" + firstname +
-                "\n lastname=" + lastname +
+                "\n firstName=" + firstName +
+                "\n lastName=" + lastName +
                 "\n email=" + email +
                 "\n groupId=" + groupId +
                 "\n}\n";
