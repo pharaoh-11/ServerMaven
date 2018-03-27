@@ -69,4 +69,30 @@ public class DBIntern {
     public void addNewIntern(Intern intern) {
         internList.add(intern);
     }
+//check iterator
+    public boolean deleteIntern(int id) {
+        for(Intern intern : internList) {
+            if(intern.getId() == id) {
+                internList.remove(intern);
+                return true;
+            }
+        }
+        return false;
+    }
+//check to the id
+    public boolean patch(int id, String internJson) {
+        ObjectMapper mapper = new ObjectMapper();
+        for(Intern intern : internList) {
+            if(intern.getId() == id) {
+                try {
+                    intern = mapper.readValue(internJson, Intern.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 }

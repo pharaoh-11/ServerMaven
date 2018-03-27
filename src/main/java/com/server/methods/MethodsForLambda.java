@@ -15,6 +15,8 @@ import java.io.IOException;
 public class MethodsForLambda {
     private static final String RESPONSE_200 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
     private static final String RESPONSE_201 = "HTTP/1.1 201 Created\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
+    private static final String RESPONSE_202 = "HTTP/1.1 202 No Content\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
+
     private static final String RESPONSE_FOR_OPTIONS = "HTTP/1.1 204 No Content\r\n"+
             "Access-Control-Allow-Credentials: true\r\n"+
             "Access-Control-Allow-Headers: Content-Type\r\n"+
@@ -113,6 +115,30 @@ public class MethodsForLambda {
     public static Response options(Request request, DBIntern dbIntern) {
         Response response = new Response();
         response.setHead(RESPONSE_FOR_OPTIONS);
+        return response;
+    }
+
+    public static Response delete(Request request, DBIntern dbIntern) {
+        Response response = new Response();
+        int id = Integer.parseInt(request.getBody());
+        if(dbIntern.deleteIntern(id)) {
+            response.setHead(RESPONSE_202);
+        }
+        else {
+            response.setHead(RESPONSE_400);
+        }
+        return response;
+    }
+
+    public static Response patch(Request request, DBIntern dbIntern) {
+        Response response = new Response();
+        int id = Integer.parseInt(request.getBody());
+        if(dbIntern.patch(id, request.getBody())) {
+            response.setHead(RESPONSE_201);
+        }
+        else {
+            response.setHead(RESPONSE_400);
+        }
         return response;
     }
 }
