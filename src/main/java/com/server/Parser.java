@@ -17,10 +17,9 @@ public class Parser {
                 parseHead(queryLine, request);
             }
             parseBody(in);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(request);
         return request;
     }
 
@@ -57,7 +56,6 @@ public class Parser {
         if(contentLength != null) {
             char[] body = new char[Integer.parseInt(contentLength)];
             in.read(body, 0, body.length);
-            System.out.println(new String(body));
             request.setBody(new String(body));
         }
     }

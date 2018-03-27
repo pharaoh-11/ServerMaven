@@ -2,6 +2,7 @@ package com.server;
 
 import com.data.Request;
 import com.data.Response;
+import com.entity.DBIntern;
 import com.handlers.ConcreteHandler;
 
 public class Dispatcher {
@@ -11,9 +12,9 @@ public class Dispatcher {
         this.router = router;
     }
 
-    public Response handleRequest(Request request) {
+    public Response handleRequest(Request request, DBIntern dbIntern) {
         ConcreteHandler concreteHandler = router.findNeededHandler(request);
-        Response response = concreteHandler.handleQuery(request);
+        Response response = concreteHandler.handleQuery(request, dbIntern);
         return response;
     }
 }

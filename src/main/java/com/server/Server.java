@@ -2,7 +2,6 @@ package com.server;
 
 import com.data.Request;
 import com.entity.DBIntern;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -14,21 +13,21 @@ public class Server {
     private ServerSocket serverSocket;
     private Request request;
     private Dispatcher dispatcher;
-    private DBIntern dBIntern;
+    private DBIntern dbIntern;
 
     public Server(Router router) {
         try {
             serverSocket = new ServerSocket(PORT);
             dispatcher = new Dispatcher(router);
-            dBIntern = new DBIntern();
+            dbIntern = new DBIntern();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void listenPort() {
+        System.out.println("Listening port 8080:");
         while(true) {
-            System.out.println("Listening port 8080:");
             try (Socket client = serverSocket.accept();
                  BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                  PrintWriter out = new PrintWriter(client.getOutputStream())) {
@@ -37,7 +36,7 @@ public class Server {
                     continue;
                 }
                 request = Parser.parseRequest(in);
-                out.print(dispatcher.handleRequest(request));
+                out.print(dispatcher.handleRequest(request, dbIntern));
             } catch (IOException e) {
                 e.printStackTrace();
             }

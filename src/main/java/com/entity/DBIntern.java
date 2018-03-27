@@ -1,39 +1,72 @@
 package com.entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class DBIntern {
     private static final File JSON_FILE = new File("./src/main/resources/db.json");
     private static final String INTERNS = "interns";
 
-    private Map<Integer, Intern> internDB;
+    private int id = 0;
+
+    private ArrayList<Intern> internList;
+
+    public ArrayList<Intern> getInternDB() {
+        return internList;
+    }
 
     public DBIntern() {
-        internDB = new HashMap<>();
+        internList = new ArrayList<>();
+
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jNode = null;
+        JsonNode jNode;
         try {
             jNode = mapper.readTree(JSON_FILE);
             jNode = jNode.withArray(INTERNS);
+            Intern intern;
+            for (int i = 0; i < jNode.size(); i++) {
+                intern = mapper.readValue(jNode.get(i).toString(), Intern.class);
+                internList.add(intern);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Intern intern = null;
-        for (int i = 0; i < jNode.size(); i++) {
-            try {
-                intern = mapper.readValue(jNode.get(i).toString(), Intern.class);
-            } catch (IOException e) {
-                e.printStackTrace();
+        calculateId();
+    }
+
+    private void calculateId() {
+        for(Intern intern : internList) {
+            if(intern.getId() >= id) {
+                id = intern.getId() + 1;
             }
-            internDB.put(intern.getId(), intern);
         }
     }
 
+    public int getAnotherID() {
+        return this.id++;
+    }
 
+    public String getAllInternsInJson() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(internList);
+    }
+
+    public String getInternByIdInJson(int id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        for(Intern intern : internList) {
+            if(intern.getId() == id) {
+                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(intern);
+            }
+        }
+        return null;
+    }
+
+    public void addNewIntern(Intern intern) {
+        internList.add(intern);
+    }
 }

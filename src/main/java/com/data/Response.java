@@ -1,21 +1,23 @@
 package com.data;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 public class Response {
     String head;
-    JsonNode entity;
+    String body;
 
     public void setHead(String head) {
         this.head = head;
     }
 
-    public void setEntity(JsonNode entities) {
-        this.entity = entities;
+    public void setBody(String entities) {
+        this.body = entities;
+    }
+
+    public boolean isBodyNull() {
+        return (body == null);
     }
 
     @Override
     public String toString() {
-        return  head + entity;
+        return  head + body;
     }
 }

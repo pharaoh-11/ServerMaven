@@ -2,6 +2,7 @@ package com.handlers;
 
 import com.data.Request;
 import com.data.Response;
+import com.entity.DBIntern;
 import com.server.RequestMethods;
 
 public class ConcreteHandler {
@@ -19,7 +20,7 @@ public class ConcreteHandler {
         return path;
     }
 
-    public Response handleQuery(Request request) {
-        return handler.getResponse(request);
+    public Response handleQuery(Request request, DBIntern dbIntern) {
+        return handler.getResponse(request, dbIntern);
     }
 }
