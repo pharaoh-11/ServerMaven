@@ -1,7 +1,7 @@
 package com;
 
 import com.server.RequestMethods;
-import com.server.Router;
+import com.server.router.Router;
 import com.server.Server;
 import com.server.methods.MethodsForLambda;
 

@@ -1,6 +1,8 @@
-package com.server;
+package com.server.parser;
 
 import com.data.Request;
+import com.server.RequestMethods;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -23,7 +25,7 @@ public class Parser {
         return request;
     }
 
-    private static void parseFirstLine(String firstString, Request request) {
+    static Request parseFirstLine(String firstString, Request request) {
         String method = firstString.split(" ")[0];
         request.setMethod(RequestMethods.checkMethods(method));
 
@@ -35,9 +37,10 @@ public class Parser {
             request.setPath(addSlashToEnding(pathAndQuery[0]));
             request.setQuery(pathAndQuery[1]);
         }
+        return request;
     }
 
-    private static String addSlashToEnding(String path) {
+    static String addSlashToEnding(String path) {
         if(path.charAt(path.length() - 1) != '/') {
             return path + "/";
         }
@@ -46,12 +49,13 @@ public class Parser {
         }
     }
 
-    private static void parseHead(String requestString, Request request) {
+    static Request parseHead(String requestString, Request request) {
         String[] header = requestString.split(": ");
         request.getHeader().put(header[0], header[1]);
+        return request;
     }
 
-    private static void parseBody(BufferedReader in) throws IOException {
+    static void parseBody(BufferedReader in) throws IOException {
         String contentLength = request.getHeader().get("Content-Length");
         if(contentLength != null) {
             char[] body = new char[Integer.parseInt(contentLength)];

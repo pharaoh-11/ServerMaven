@@ -4,6 +4,7 @@ import com.server.RequestMethods;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Request {
     private RequestMethods method;
@@ -57,5 +58,23 @@ public class Request {
                 ", header=" + header +
                 ", body='" + body + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Request request = (Request) o;
+        return method == request.method &&
+                Objects.equals(path, request.path) &&
+                Objects.equals(query, request.query) &&
+                Objects.equals(header, request.header) &&
+                Objects.equals(body, request.body);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(method, path, query, header, body);
     }
 }
