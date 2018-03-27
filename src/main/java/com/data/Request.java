@@ -9,12 +9,13 @@ import java.util.Objects;
 public class Request {
     private RequestMethods method;
     private String path;
-    private String query;
+    private HashMap<String, Integer> query;
     private Map<String, String> header;
     private String body;
 
     public Request() {
         header = new HashMap<>();
+        query = new HashMap<>();
     }
 
     public void setMethod(RequestMethods method) {
@@ -33,8 +34,12 @@ public class Request {
         return path;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public HashMap<String, Integer> getQuery() {
+        return query;
+    }
+
+    public void addQueryItem(String key, Integer value) {
+        query.put(key, value);
     }
 
     public void setBody(String body) {

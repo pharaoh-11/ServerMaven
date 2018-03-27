@@ -36,6 +36,6 @@ public class Router {
     }
 
     private String makeCorrespondPathToCheck(String path) {
-        return path.replaceAll("/\\d*/", "/id/");
+        return path.replaceAll("/\\d*/", "/:/");
     }
 }

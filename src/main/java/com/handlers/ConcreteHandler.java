@@ -12,7 +12,7 @@ public class ConcreteHandler {
 
     public ConcreteHandler(RequestMethods requestMethods, String path, Handler handler) {
         this.requestMethods = requestMethods;
-        this.path = path;
+        this.path = path.replaceAll("/:\\w*/", "/:/");
         this.handler = handler;
     }
 

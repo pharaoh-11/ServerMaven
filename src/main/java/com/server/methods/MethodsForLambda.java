@@ -43,8 +43,7 @@ public class MethodsForLambda {
     public static Response getInternWithId(Request request, DBIntern dbIntern) {
         Response response = new Response();
         try {
-            String[] requestParts = request.getPath().split("/");
-            int id = Integer.parseInt(requestParts[2].split(" ")[0]);
+            int id = request.getQuery().get("interns");
             response.setBody(dbIntern.getInternByIdInJson(id));
 
             if (response.isBodyNull()) {

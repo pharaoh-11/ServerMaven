@@ -5,6 +5,7 @@ import com.server.RequestMethods;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class Parser {
 
@@ -28,15 +29,22 @@ public class Parser {
     static Request parseFirstLine(String firstString, Request request) {
         String method = firstString.split(" ")[0];
         request.setMethod(RequestMethods.checkMethods(method));
-
         String path = firstString.split(" ")[1];
-        if(path.indexOf('?') < 0) {
-            request.setPath(addSlashToEnding(path));
-        } else {
-            String [] pathAndQuery = path.split("\\?");
-            request.setPath(addSlashToEnding(pathAndQuery[0]));
-            request.setQuery(pathAndQuery[1]);
+        request.setPath(addSlashToEnding(path));
+        if(path.split("/").length > 2) {
+            String[] partOfPath = path.split("/");
+            for(int i = 2; i < partOfPath.length; i+=2) {
+                request.addQueryItem(partOfPath[i - 1], Integer.parseInt(partOfPath[i]));
+            }
         }
+
+//        if(path.indexOf('?') < 0) {
+//            request.setPath(addSlashToEnding(path));
+//        } else {
+//            String [] pathAndQuery = path.split("\\?");
+//            request.setPath(addSlashToEnding(pathAndQuery[0]));
+//            request.setQuery(pathAndQuery[1]);
+//        }
         return request;
     }
 
