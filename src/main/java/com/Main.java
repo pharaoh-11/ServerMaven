@@ -17,7 +17,7 @@ public class Main {
         router.addNewHandler(RequestMethods.OPTIONS, "/interns/:id/", MethodsForLambda::options);
         router.addNewHandler(RequestMethods.DELETE, "/interns/:id/", MethodsForLambda::delete);
         router.addNewHandler(RequestMethods.PATCH, "/interns/:id/", MethodsForLambda::patch);
-//check :id
+
         Server server = new Server(router);
         server.listenPort();
     }

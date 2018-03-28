@@ -3,10 +3,17 @@ package com.server;
 import com.data.Request;
 import com.data.Response;
 import com.entity.DBIntern;
+import com.exception.NoSuchHandlerException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.handlers.ConcreteHandler;
 import com.server.router.Router;
 
 public class Dispatcher {
+    private static final String RESPONSE_400 = "HTTP/1.1 400 Bad Request\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
+
     private Router router;
 
     public Dispatcher(Router router) {
@@ -14,8 +21,33 @@ public class Dispatcher {
     }
 
     public Response handleRequest(Request request, DBIntern dbIntern) {
-        ConcreteHandler concreteHandler = router.findNeededHandler(request);
-        Response response = concreteHandler.handleQuery(request, dbIntern);
+        ConcreteHandler concreteHandler = null;
+        Response response;
+        try {
+            concreteHandler = router.findNeededHandler(request);
+        } catch (NoSuchHandlerException e) {
+            e.printStackTrace();
+            return send400();
+        }
+        response = concreteHandler.handleQuery(request, dbIntern);
+        return response;
+    }
+
+    private static Response send400() {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.createObjectNode();
+
+        ((ObjectNode) rootNode).put("status", "400");
+        ((ObjectNode) rootNode).put("statusText", "Wrong request");
+        String httpResponse = null;
+        try {
+            httpResponse = RESPONSE_400 +
+                    mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Response response = new Response();
+        response.setHead(httpResponse);
         return response;
     }
 }

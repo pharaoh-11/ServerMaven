@@ -34,9 +34,6 @@ public class Server {
                  BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                  PrintWriter out = new PrintWriter(client.getOutputStream())) {
 
-                if(client == null) {
-                    continue;
-                }
                 request = Parser.parseRequest(in);
                 out.print(dispatcher.handleRequest(request, dbIntern));
             } catch (IOException e) {

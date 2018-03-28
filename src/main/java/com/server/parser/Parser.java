@@ -38,14 +38,6 @@ public class Parser {
                 request.addQueryItem(partOfPath[i - 1], Integer.parseInt(partOfPath[i]));
             }
         }
-
-//        if(path.indexOf('?') < 0) {
-//            request.setPath(addSlashToEnding(path));
-//        } else {
-//            String [] pathAndQuery = path.split("\\?");
-//            request.setPath(addSlashToEnding(pathAndQuery[0]));
-//            request.setQuery(pathAndQuery[1]);
-//        }
         return request;
     }
 

@@ -1,6 +1,7 @@
 package com.server.router;
 
 import com.data.Request;
+import com.exception.NoSuchHandlerException;
 import com.handlers.ConcreteHandler;
 import com.handlers.Handler;
 import com.server.RequestMethods;
@@ -25,17 +26,17 @@ public class Router {
         handlers.get(method).add(new ConcreteHandler(method, path, handler));
     }
 
-    public ConcreteHandler findNeededHandler(Request request) {
+    public ConcreteHandler findNeededHandler(Request request) throws NoSuchHandlerException {
         for(ConcreteHandler handler: handlers.get(request.getMethod())) {
             if(handler.getPath().equals(makeCorrespondPathToCheck(request.getPath()))) {
                 return handler;
             }
         }
         //not found concreteHandler
-        throw new IllegalArgumentException();
+        throw new NoSuchHandlerException();
     }
 
-    private String makeCorrespondPathToCheck(String path) {
+    String makeCorrespondPathToCheck(String path) {
         return path.replaceAll("/\\d*/", "/:/");
     }
 }
