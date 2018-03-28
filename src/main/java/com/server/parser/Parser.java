@@ -26,7 +26,6 @@ public class Parser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(request);
         return request;
     }
 

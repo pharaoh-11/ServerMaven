@@ -4,10 +4,13 @@ import com.server.RequestMethods;
 import com.server.router.Router;
 import com.server.Server;
 import com.server.methods.MethodsForLambda;
+import org.apache.log4j.BasicConfigurator;
 
 public class Main {
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
+
         Router router = new Router();
         router.addNewHandler(RequestMethods.GET, "/interns/", MethodsForLambda::getInternWithoutId);
         router.addNewHandler(RequestMethods.GET, "/interns/:id/", MethodsForLambda::getInternWithId);
