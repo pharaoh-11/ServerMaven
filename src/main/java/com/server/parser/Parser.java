@@ -1,13 +1,16 @@
 package com.server.parser;
 
 import com.data.Request;
+import com.server.Dispatcher;
 import com.server.RequestMethods;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class Parser {
+    private static final Logger LOG = Logger.getLogger(Parser.class);
 
     private static Request request;
 
@@ -38,6 +41,7 @@ public class Parser {
                 request.addQueryItem(partOfPath[i - 1], Integer.parseInt(partOfPath[i]));
             }
         }
+        LOG.info("Parser has parsed first line of query");
         return request;
     }
 
@@ -63,5 +67,6 @@ public class Parser {
             in.read(body, 0, body.length);
             request.setBody(new String(body));
         }
+        LOG.info("Parser has parsed body");
     }
 }
