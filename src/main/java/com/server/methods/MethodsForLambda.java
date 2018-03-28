@@ -120,7 +120,7 @@ public class MethodsForLambda {
 
     public static Response delete(Request request, DBIntern dbIntern) {
         Response response = new Response();
-        int id = Integer.parseInt(request.getBody());
+        int id = request.getQuery().get("interns");
         if(dbIntern.deleteIntern(id)) {
             response.setHead(RESPONSE_202);
         }
@@ -132,7 +132,7 @@ public class MethodsForLambda {
 
     public static Response patch(Request request, DBIntern dbIntern) {
         Response response = new Response();
-        int id = Integer.parseInt(request.getBody());
+        int id = request.getQuery().get("interns");
         if(dbIntern.patch(id, request.getBody())) {
             response.setHead(RESPONSE_201);
         }

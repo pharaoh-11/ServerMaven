@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 public class DBIntern {
     private static final File JSON_FILE = new File("./src/main/resources/db.json");
@@ -79,13 +81,17 @@ public class DBIntern {
         }
         return false;
     }
-//check to the id
+
     public boolean patch(int id, String internJson) {
         ObjectMapper mapper = new ObjectMapper();
-        for(Intern intern : internList) {
+        Intern intern;
+        for(ListIterator<Intern> iterator = internList.listIterator(); iterator.hasNext(); ) {
+            intern = iterator.next();
             if(intern.getId() == id) {
                 try {
                     intern = mapper.readValue(internJson, Intern.class);
+                    intern.setId(id);
+                    iterator.set(intern);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;
