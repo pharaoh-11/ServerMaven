@@ -1,4 +1,4 @@
-package com.server.methods;
+package com.server.controller;
 
 import com.data.Request;
 import com.data.Response;
@@ -8,19 +8,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.server.parser.Parser;
 import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 
-public class MethodsForLambda {
-    private static final Logger LOG = Logger.getLogger(MethodsForLambda.class);
+public class Controller {
+    private static final Logger LOG = Logger.getLogger(Controller.class);
 
     private static final String RESPONSE_200 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
     private static final String RESPONSE_201 = "HTTP/1.1 201 Created\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
     private static final String RESPONSE_202 = "HTTP/1.1 202 No Content\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
-
     private static final String RESPONSE_FOR_OPTIONS = "HTTP/1.1 204 No Content\r\n"+
             "Access-Control-Allow-Credentials: true\r\n"+
             "Access-Control-Allow-Headers: Content-Type\r\n"+
@@ -33,7 +30,14 @@ public class MethodsForLambda {
     private static final File JSON_FILE = new File("./src/main/resources/db.json");
     private static final String GROUPS = "groups";
 
-    public static Response getInternWithoutId(Request request, DBIntern dbIntern) {
+    private SQLDataBase sqlDataBase;
+
+    public Controller() {
+        sqlDataBase = new SQLDataBase();
+        sqlDataBase.createConnection();
+    }
+
+    public Response getInternWithoutId(Request request, DBIntern dbIntern) {
         Response response = new Response();
         try {
             response.setBody(dbIntern.getAllInternsInJson());
@@ -47,7 +51,7 @@ public class MethodsForLambda {
         return response;
     }
 
-    public static Response getInternWithId(Request request, DBIntern dbIntern) {
+    public Response getInternWithId(Request request, DBIntern dbIntern) {
         Response response = new Response();
         try {
             int id = request.getQuery().get("interns");
@@ -65,7 +69,7 @@ public class MethodsForLambda {
         return response;
     }
 
-    public static Response getGroups(Request request, DBIntern dbIntern) {
+    public Response getGroups(Request request, DBIntern dbIntern) {
         Response response = new Response();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jNode;
@@ -84,7 +88,7 @@ public class MethodsForLambda {
         return response;
     }
 
-    private static Response send404() {
+    private Response send404() {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.createObjectNode();
 
@@ -103,7 +107,7 @@ public class MethodsForLambda {
         return response;
     }
 
-    public static Response postNewIntern(Request request, DBIntern dbIntern) {
+    public Response postNewIntern(Request request, DBIntern dbIntern) {
         Response response = new Response();
         ObjectMapper mapper = new ObjectMapper();
 
@@ -124,14 +128,14 @@ public class MethodsForLambda {
         return response;
     }
 
-    public static Response options(Request request, DBIntern dbIntern) {
+    public Response options(Request request, DBIntern dbIntern) {
         Response response = new Response();
         response.setHead(RESPONSE_FOR_OPTIONS);
         LOG.info("Answer to options");
         return response;
     }
 
-    public static Response delete(Request request, DBIntern dbIntern) {
+    public Response delete(Request request, DBIntern dbIntern) {
         Response response = new Response();
         int id = request.getQuery().get("interns");
         if(dbIntern.deleteIntern(id)) {
@@ -145,7 +149,7 @@ public class MethodsForLambda {
         return response;
     }
 
-    public static Response patch(Request request, DBIntern dbIntern) {
+    public Response patch(Request request, DBIntern dbIntern) {
         Response response = new Response();
         int id = request.getQuery().get("interns");
         if(dbIntern.patch(id, request.getBody())) {
