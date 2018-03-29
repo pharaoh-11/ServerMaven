@@ -1,7 +1,7 @@
 package com.server;
 
 import com.data.Request;
-import com.entity.DBIntern;
+import com.server.controller.MemoryDataBase;
 import com.server.parser.Parser;
 import com.server.router.Router;
 import org.apache.log4j.Logger;
@@ -18,13 +18,13 @@ public class Server {
     private ServerSocket serverSocket;
     private Request request;
     private Dispatcher dispatcher;
-    private DBIntern dbIntern;
+    private MemoryDataBase memoryDataBase;
 
     public Server(Router router) {
         try {
             serverSocket = new ServerSocket(PORT);
             dispatcher = new Dispatcher(router);
-            dbIntern = new DBIntern();
+            memoryDataBase = new MemoryDataBase();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +40,7 @@ public class Server {
                 LOG.info("Server has accepted query.");
 
                 request = Parser.parseRequest(in);
-                out.print(dispatcher.handleRequest(request, dbIntern));
+                out.print(dispatcher.handleRequest(request));
             } catch (IOException e) {
                 LOG.error("Happened something bad");
                 e.printStackTrace();

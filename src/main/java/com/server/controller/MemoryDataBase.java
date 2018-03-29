@@ -1,5 +1,6 @@
-package com.entity;
+package com.server.controller;
 
+import com.entity.Intern;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class DBIntern {
+public class MemoryDataBase {
     private static final File JSON_FILE = new File("./src/main/resources/db.json");
     private static final String INTERNS = "interns";
 
@@ -22,7 +23,7 @@ public class DBIntern {
         return internList;
     }
 
-    public DBIntern() {
+    public MemoryDataBase() {
         internList = new ArrayList<>();
 
         ObjectMapper mapper = new ObjectMapper();

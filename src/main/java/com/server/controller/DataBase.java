@@ -3,11 +3,13 @@ package com.server.controller;
 import com.entity.Group;
 import com.entity.Intern;
 
+import java.util.ArrayList;
+
 public interface DataBase {
-    Intern[] getAllInterns();
-    Intern getInternsById();
-    void postIntern();
-    void deleteIntern();
-    void patchIntern();
-    Group[] getGroups();
+    ArrayList<Intern> getAllInterns();
+    Intern getInternsById(int id);
+    void postIntern(Intern intern);
+    boolean deleteIntern(int id);
+    boolean patchIntern(Intern intern);
+    ArrayList<Group> getGroups();
 }

@@ -2,7 +2,7 @@ package com.handlers;
 
 import com.data.Request;
 import com.data.Response;
-import com.entity.DBIntern;
+import com.server.controller.MemoryDataBase;
 import com.server.RequestMethods;
 
 import java.util.Objects;
@@ -22,8 +22,8 @@ public class ConcreteHandler {
         return path;
     }
 
-    public Response handleQuery(Request request, DBIntern dbIntern) {
-        return handler.getResponse(request, dbIntern);
+    public Response handleQuery(Request request) {
+        return handler.getResponse(request);
     }
 
     @Override

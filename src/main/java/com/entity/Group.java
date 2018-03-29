@@ -1,6 +1,6 @@
 package com.entity;
 
-public class Group {
+public class Group extends Entity {
     private int id;
     private String name;
     private String dateStart;

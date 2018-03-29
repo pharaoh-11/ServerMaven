@@ -2,7 +2,7 @@ package com.server;
 
 import com.data.Request;
 import com.data.Response;
-import com.entity.DBIntern;
+import com.server.controller.MemoryDataBase;
 import com.exception.NoSuchHandlerException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,7 +23,7 @@ public class Dispatcher {
         this.router = router;
     }
 
-    public Response handleRequest(Request request, DBIntern dbIntern) {
+    public Response handleRequest(Request request) {
         ConcreteHandler concreteHandler;
         Response response;
         try {
@@ -33,7 +33,7 @@ public class Dispatcher {
             LOG.error("Handler for accepted request doesn't exist");
             return send400();
         }
-        response = concreteHandler.handleQuery(request, dbIntern);
+        response = concreteHandler.handleQuery(request);
         return response;
     }
 

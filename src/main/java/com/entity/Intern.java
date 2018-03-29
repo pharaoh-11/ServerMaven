@@ -1,6 +1,6 @@
 package com.entity;
 
-public class Intern {
+public class Intern extends Entity {
     private int id;
     private String firstName;
     private String lastName;
@@ -45,6 +45,10 @@ public class Intern {
 
     public int getGroupId() {
         return groupId;
+    }
+
+    public boolean isEmpty() {
+        return (id == 0 || firstName == null || lastName == null || email == null || groupId == 0);
     }
 
     @Override
