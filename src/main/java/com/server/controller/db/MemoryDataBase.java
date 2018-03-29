@@ -76,9 +76,10 @@ public class MemoryDataBase implements DataBase {
     }
 
     @Override
-    public void postIntern(Intern intern) {
+    public boolean postIntern(Intern intern) {
         intern.setId(getAnotherID());
         internList.add(intern);
+        return true;
     }
 
     @Override

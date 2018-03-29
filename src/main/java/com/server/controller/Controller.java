@@ -42,7 +42,26 @@ public class Controller {
     public Response getAllInterns(Request request) {
         Response response = new Response();
         ArrayList<Intern> interns = dataBase.getAllInterns();
-        response = getResponseBody(response, interns);
+        return getResponseBody(response, interns);
+    }
+
+    public Response getGroups(Request request) {
+        Response response = new Response();
+        ArrayList<Group> groups = dataBase.getGroups();
+        return getResponseBody(response, groups);
+    }
+
+    private Response getResponseBody(Response response, ArrayList<? extends Entity> list) {
+        try {
+            response.setBody(View.viewBody(list));
+        } catch (JsonProcessingException e) {
+            LOG.error("Didn't create response body");
+            e.printStackTrace();
+            response.setHead(RESPONSE_500);
+        }
+        response.setHead(RESPONSE_200);
+        LOG.info("Method GET was processed");
+
         return response;
     }
 
@@ -64,31 +83,10 @@ public class Controller {
         return response;
     }
 
-    public Response getGroups(Request request) {
-        Response response = new Response();
-        ArrayList<Group> groups = dataBase.getGroups();
-        response = getResponseBody(response, groups);
-        return response;
-    }
-
-    private Response getResponseBody(Response response, ArrayList<? extends Entity> list) {
-        try {
-            response.setBody(View.viewBody(list));
-        } catch (JsonProcessingException e) {
-            LOG.error("Didn't create response body");
-            e.printStackTrace();
-            response.setHead(RESPONSE_500);
-        }
-        response.setHead(RESPONSE_200);
-        LOG.info("Method GET was processed");
-
-        return response;
-    }
-
     public Response options(Request request) {
         Response response = new Response();
         response.setHead(RESPONSE_FOR_OPTIONS);
-        LOG.info("Answer to options");
+        LOG.info("Answer to options query method");
         return response;
     }
 
@@ -99,15 +97,16 @@ public class Controller {
         String body = request.getBody();
         try {
             intern = mapper.readValue(body, Intern.class);
-            dataBase.postIntern(intern);
-            LOG.info("Intern was added to DB");
+            if(dataBase.postIntern(intern)) {
+                LOG.info("Intern was added to DB");
+                response.setHead(RESPONSE_201);
+                return response;
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("Intern was not added to DB");
-            response.setHead(RESPONSE_500);
-            return response;
         }
-        response.setHead(RESPONSE_201);
+        LOG.error("Intern was not added to DB");
+        response.setHead(RESPONSE_500);
         return response;
     }
 
@@ -150,19 +149,19 @@ public class Controller {
     private Response send404() {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.createObjectNode();
+        Response response = new Response();
 
         ((ObjectNode) rootNode).put("status", "404");
         ((ObjectNode) rootNode).put("statusText", "Not Found");
-        String httpResponse = null;
+        LOG.info("404, not found");
         try {
-            httpResponse = RESPONSE_404 +
-                    mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
+            response.setBody(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             LOG.error("Didn't create response body");
         }
-        Response response = new Response();
-        response.setHead(httpResponse);
+
+        response.setHead(RESPONSE_404);
         return response;
     }
 }

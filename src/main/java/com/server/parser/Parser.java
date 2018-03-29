@@ -1,13 +1,10 @@
 package com.server.parser;
 
 import com.data.Request;
-import com.server.Dispatcher;
 import com.server.RequestMethods;
 import org.apache.log4j.Logger;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class Parser {
     private static final Logger LOG = Logger.getLogger(Parser.class);
@@ -22,6 +19,7 @@ public class Parser {
             while (!(queryLine = in.readLine()).isEmpty()) {
                 parseHead(queryLine, request);
             }
+            LOG.info("Parser has parsed head of query");
             parseBody(in);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,8 +45,7 @@ public class Parser {
     static String addSlashToEnding(String path) {
         if(path.charAt(path.length() - 1) != '/') {
             return path + "/";
-        }
-        else {
+        } else {
             return path;
         }
     }

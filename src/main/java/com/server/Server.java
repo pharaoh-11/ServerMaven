@@ -1,7 +1,6 @@
 package com.server;
 
 import com.data.Request;
-import com.server.controller.db.MemoryDataBase;
 import com.server.parser.Parser;
 import com.server.router.Router;
 import org.apache.log4j.Logger;
@@ -18,13 +17,11 @@ public class Server {
     private ServerSocket serverSocket;
     private Request request;
     private Dispatcher dispatcher;
-    private MemoryDataBase memoryDataBase;
 
     public Server(Router router) {
         try {
             serverSocket = new ServerSocket(PORT);
             dispatcher = new Dispatcher(router);
-            memoryDataBase = new MemoryDataBase();
         } catch (IOException e) {
             e.printStackTrace();
         }

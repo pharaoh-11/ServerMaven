@@ -80,7 +80,7 @@ public class SQLDataBase implements DataBase {
     }
 
     @Override
-    public void postIntern(Intern intern) {
+    public boolean postIntern(Intern intern) {
         try(PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTERN)) {
             preparedStatement.setInt(1, intern.getId());
             preparedStatement.setString(2, intern.getFirstName());
@@ -88,10 +88,13 @@ public class SQLDataBase implements DataBase {
             preparedStatement.setString(4, intern.getEmail());
             preparedStatement.setInt(5, intern.getGroupId());
 
-            preparedStatement.executeUpdate();
+            if(preparedStatement.executeUpdate() > 0) {
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override
