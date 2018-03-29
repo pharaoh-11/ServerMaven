@@ -3,8 +3,8 @@ package com.entity;
 public class Group extends Entity {
     private int id;
     private String name;
-    private String dateStart;
-    private String dateFinish;
+    private String periodStart;
+    private String periodFinish;
 
     public int getId() {
         return id;
@@ -22,19 +22,19 @@ public class Group extends Entity {
         this.name = name;
     }
 
-    public String getDateStart() {
-        return dateStart;
+    public String getPeriodStart() {
+        return periodStart;
     }
 
-    public void setDateStart(String dateStart) {
-        this.dateStart = dateStart;
+    public void setPeriodStart(String periodStart) {
+        this.periodStart = periodStart;
     }
 
-    public String getDateFinish() {
-        return dateFinish;
+    public String getPeriodFinish() {
+        return periodFinish;
     }
 
-    public void setDateFinish(String dateFinish) {
-        this.dateFinish = dateFinish;
+    public void setPeriodFinish(String periodFinish) {
+        this.periodFinish = periodFinish;
     }
 }

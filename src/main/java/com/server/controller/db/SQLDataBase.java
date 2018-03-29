@@ -1,4 +1,4 @@
-package com.server.controller;
+package com.server.controller.db;
 
 import com.entity.Group;
 import com.entity.Intern;
@@ -32,18 +32,6 @@ public class SQLDataBase implements DataBase {
     public SQLDataBase() {
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public void closeConnection() {
-        try {
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -148,8 +136,8 @@ public class SQLDataBase implements DataBase {
                 group = new Group();
                 group.setId(resultSet.getInt(ID));
                 group.setName(resultSet.getString(NAME));
-                group.setDateStart(resultSet.getString(PERIOD_START));
-                group.setDateFinish(resultSet.getString(PERIOD_FINISH));
+                group.setPeriodStart(resultSet.getString(PERIOD_START));
+                group.setPeriodFinish(resultSet.getString(PERIOD_FINISH));
                 groups.add(group);
             }
         } catch (SQLException e) {

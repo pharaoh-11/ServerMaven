@@ -1,7 +1,7 @@
 package com.server;
 
 import com.data.Request;
-import com.server.controller.MemoryDataBase;
+import com.server.controller.db.MemoryDataBase;
 import com.server.parser.Parser;
 import com.server.router.Router;
 import org.apache.log4j.Logger;

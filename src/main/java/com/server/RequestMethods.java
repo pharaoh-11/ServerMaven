@@ -9,7 +9,7 @@ public enum RequestMethods {
                 return rm;
             }
         }
-        throw new IllegalArgumentException();
+        return null;
     }
 }
 

@@ -1,30 +1,27 @@
-package com.server.controller;
+package com.server.controller.db;
 
+import com.entity.Group;
 import com.entity.Intern;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ListIterator;
 
-public class MemoryDataBase {
+public class MemoryDataBase implements DataBase {
     private static final File JSON_FILE = new File("./src/main/resources/db.json");
     private static final String INTERNS = "interns";
+    private static final String GROUPS = "groups";
 
-    private int id = 0;
-
+    private int id;
     private ArrayList<Intern> internList;
-
-    public ArrayList<Intern> getInternDB() {
-        return internList;
-    }
+    private ArrayList<Group> groupList;
 
     public MemoryDataBase() {
         internList = new ArrayList<>();
+        groupList = new ArrayList<>();
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jNode;
@@ -35,6 +32,15 @@ public class MemoryDataBase {
             for (int i = 0; i < jNode.size(); i++) {
                 intern = mapper.readValue(jNode.get(i).toString(), Intern.class);
                 internList.add(intern);
+            }
+
+
+            jNode = mapper.readTree(JSON_FILE);
+            jNode = jNode.withArray(GROUPS);
+            Group group;
+            for (int i = 0; i < jNode.size(); i++) {
+                group = mapper.readValue(jNode.get(i).toString(), Group.class);
+                groupList.add(group);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,25 +60,28 @@ public class MemoryDataBase {
         return this.id++;
     }
 
-    public String getAllInternsInJson() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(internList);
+    @Override
+    public ArrayList<Intern> getAllInterns() {
+        return internList;
     }
 
-    public String getInternByIdInJson(int id) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    @Override
+    public Intern getInternsById(int id) {
         for(Intern intern : internList) {
             if(intern.getId() == id) {
-                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(intern);
+                return intern;
             }
         }
         return null;
     }
 
-    public void addNewIntern(Intern intern) {
+    @Override
+    public void postIntern(Intern intern) {
+        intern.setId(getAnotherID());
         internList.add(intern);
     }
-//check iterator
+
+    @Override
     public boolean deleteIntern(int id) {
         for(Intern intern : internList) {
             if(intern.getId() == id) {
@@ -83,23 +92,21 @@ public class MemoryDataBase {
         return false;
     }
 
-    public boolean patch(int id, String internJson) {
-        ObjectMapper mapper = new ObjectMapper();
-        Intern intern;
+    @Override
+    public boolean patchIntern(Intern intern) {
+        Intern internInList;
         for(ListIterator<Intern> iterator = internList.listIterator(); iterator.hasNext(); ) {
-            intern = iterator.next();
-            if(intern.getId() == id) {
-                try {
-                    intern = mapper.readValue(internJson, Intern.class);
-                    intern.setId(id);
-                    iterator.set(intern);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
+            internInList = iterator.next();
+            if(internInList.getId() == intern.getId()) {
+                iterator.set(intern);
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public ArrayList<Group> getGroups() {
+        return groupList;
     }
 }
