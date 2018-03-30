@@ -3,7 +3,6 @@ package com.server.controller;
 import com.data.Request;
 import com.data.Response;
 import com.entity.Entity;
-import com.entity.Group;
 import com.entity.Intern;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,128 +17,105 @@ import java.util.ArrayList;
 public class Controller {
     private static final Logger LOG = Logger.getLogger(Controller.class);
 
-    private static final String RESPONSE_200 = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
-    private static final String RESPONSE_201 = "HTTP/1.1 201 Created\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
-    private static final String RESPONSE_202 = "HTTP/1.1 202 No Content\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
-    private static final String RESPONSE_FOR_OPTIONS = "HTTP/1.1 204 No Content\r\n"+
-            "Access-Control-Allow-Credentials: true\r\n"+
-            "Access-Control-Allow-Headers: Content-Type\r\n"+
-            "Access-Control-Allow-Methods: GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS\r\n" +
-            "Access-Control-Allow-Origin: * \r\nConnection: keep-alive\r\n" +
-            "Vary: Origin, Access-Control-Request-Headers\r\n\r\n";
-    private static final String RESPONSE_400 = "HTTP/1.1 400 Bad Request\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
-    private static final String RESPONSE_404 = "HTTP/1.1 404 Not Found\r\nContent-Type: application/json; charset=utf-8\r\n\r\n";
-    private static final String RESPONSE_500 = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n";
-
     private DataBase dataBase;
+    private ResponseHead responseHead;
 
     public Controller(DataBase dataBase) {
         this.dataBase = dataBase;
+        responseHead = new ResponseHead();
     }
 
     public Response getAllInterns(Request request) {
-        Response response = new Response();
-        ArrayList<Intern> interns = dataBase.getAllInterns();
-        return getResponseBody(response, interns);
+        return getResponseBody(new Response(), dataBase.getAllInterns());
     }
 
     public Response getGroups(Request request) {
-        Response response = new Response();
-        ArrayList<Group> groups = dataBase.getGroups();
-        return getResponseBody(response, groups);
+        return getResponseBody(new Response(), dataBase.getGroups());
     }
 
     private Response getResponseBody(Response response, ArrayList<? extends Entity> list) {
-        try {
-            response.setBody(View.viewBody(list));
-        } catch (JsonProcessingException e) {
-            LOG.error("Didn't create response body");
-            e.printStackTrace();
-            response.setHead(RESPONSE_500);
-        }
-        response.setHead(RESPONSE_200);
+        response.setBody(View.viewBody(list));
+        response.setHead(responseHead.getResponseHead(ResponseStatus.S200));
         LOG.info("Method GET was processed");
-
         return response;
     }
 
     public Response getInternById(Request request) {
         Response response = new Response();
-        try {
-            int id = request.getQuery().get("interns");
-            response.setBody(View.viewBody(dataBase.getInternsById(id)));
+        int id = request.getQuery().get("interns");
+        response.setBody(View.viewBody(dataBase.getInternsById(id)));
 
-            if (response.isBodyNull()) {
-                return send404();
-            }
-            response.setHead(RESPONSE_200);
-            LOG.info("Method GET was processed");
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOG.error("Didn't create response body");
+        if (response.isBodyNull()) {
+            return send404();
         }
+        response.setHead(responseHead.getResponseHead(ResponseStatus.S200));
+        LOG.info("Method GET was processed");
         return response;
     }
 
     public Response options(Request request) {
         Response response = new Response();
-        response.setHead(RESPONSE_FOR_OPTIONS);
+        response.setHead(responseHead.getResponseHead(ResponseStatus.S_FOR_OPTIONS));
         LOG.info("Answer to options query method");
         return response;
     }
 
     public Response postNewIntern(Request request) {
-        Response response = new Response();
+        Intern intern = createInternFromRequest(request);
+        if (dataBase.postIntern(intern)) {
+            return successfulDataUpdate();
+        } else {
+            return failedDataUpdate();
+        }
+    }
+
+    private Intern createInternFromRequest(Request request) {
         ObjectMapper mapper = new ObjectMapper();
-        Intern intern;
-        String body = request.getBody();
         try {
-            intern = mapper.readValue(body, Intern.class);
-            if(dataBase.postIntern(intern)) {
-                LOG.info("Intern was added to DB");
-                response.setHead(RESPONSE_201);
-                return response;
-            }
+            return mapper.readValue(request.getBody(), Intern.class);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LOG.error("Intern was not added to DB");
-        response.setHead(RESPONSE_500);
+        return null;
+    }
+
+    private Response successfulDataUpdate() {
+        Response response = new Response();
+        LOG.info("Data was successful updated");
+        response.setHead(responseHead.getResponseHead(ResponseStatus.S201));
         return response;
+    }
+
+    private Response failedDataUpdate() {
+        Response response = new Response();
+        LOG.error("Data wasn't updated");
+        response.setHead(responseHead.getResponseHead(ResponseStatus.S500));
+        return response;
+    }
+
+    public Response patch(Request request) {
+        Intern intern = createInternFromRequest(request);
+        int id = request.getQuery().get("interns");
+        intern.setId(id);
+        if(dataBase.patchIntern(intern)) {
+            return successfulDataUpdate();
+        }
+        else {
+            return failedDataUpdate();
+        }
     }
 
     public Response delete(Request request) {
         Response response = new Response();
         int id = request.getQuery().get("interns");
         if(dataBase.deleteIntern(id)) {
-            response.setHead(RESPONSE_202);
+            response.setHead(responseHead.getResponseHead(ResponseStatus.S202));
             LOG.info("Intern was deleted");
         }
         else {
-            response.setHead(RESPONSE_400);
+            response.setHead(responseHead.getResponseHead(ResponseStatus.S400));
             LOG.error("Intern was not deleted");
-        }
-        return response;
-    }
-
-    public Response patch(Request request) {
-        Response response = new Response();
-        ObjectMapper mapper = new ObjectMapper();
-        Intern intern = null;
-        int id = request.getQuery().get("interns");
-        try {
-            intern = mapper.readValue(request.getBody(), Intern.class);
-            intern.setId(id);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(dataBase.patchIntern(intern)) {
-            response.setHead(RESPONSE_201);
-            LOG.info("Intern was updated");
-        }
-        else {
-            response.setHead(RESPONSE_400);
-            LOG.error("Intern was not updated");
         }
         return response;
     }
@@ -159,7 +135,7 @@ public class Controller {
             LOG.error("Didn't create response body");
         }
 
-        response.setHead(RESPONSE_404);
+        response.setHead(responseHead.getResponseHead(ResponseStatus.S404));
         return response;
     }
 

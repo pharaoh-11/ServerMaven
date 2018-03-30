@@ -2,6 +2,7 @@ package com;
 
 import com.server.RequestMethods;
 import com.server.controller.Controller;
+import com.server.controller.db.MemoryDataBase;
 import com.server.controller.db.SQLDataBase;
 import com.server.router.Router;
 import com.server.Server;
@@ -11,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        Controller controller = new Controller(new SQLDataBase());
+        Controller controller = new Controller(new MemoryDataBase());
         Router router = new Router();
 
         router.addNewRout(RequestMethods.GET, "/interns/", controller::getAllInterns);

@@ -2,49 +2,19 @@ package com.server.controller.db;
 
 import com.entity.Group;
 import com.entity.Intern;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class MemoryDataBase implements DataBase {
-    private static final File JSON_FILE = new File("./src/main/resources/db.json");
-    private static final String INTERNS = "interns";
-    private static final String GROUPS = "groups";
-
     private int id;
     private ArrayList<Intern> internList;
     private ArrayList<Group> groupList;
 
     public MemoryDataBase() {
-        internList = new ArrayList<>();
-        groupList = new ArrayList<>();
+        JsonReader jsonReader = new JsonReader();
+        internList = jsonReader.getInternList();
+        groupList = jsonReader.getGroupList();
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jNode;
-        try {
-            jNode = mapper.readTree(JSON_FILE);
-            jNode = jNode.withArray(INTERNS);
-            Intern intern;
-            for (int i = 0; i < jNode.size(); i++) {
-                intern = mapper.readValue(jNode.get(i).toString(), Intern.class);
-                internList.add(intern);
-            }
-
-
-            jNode = mapper.readTree(JSON_FILE);
-            jNode = jNode.withArray(GROUPS);
-            Group group;
-            for (int i = 0; i < jNode.size(); i++) {
-                group = mapper.readValue(jNode.get(i).toString(), Group.class);
-                groupList.add(group);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         calculateId();
     }
 

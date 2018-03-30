@@ -8,17 +8,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 
 public class View {
-    public static String viewBody(ArrayList<? extends Entity> body) throws JsonProcessingException {
+    public static String viewBody(ArrayList<? extends Entity> body) {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static String viewBody(Intern intern) throws JsonProcessingException {
+    public static String viewBody(Intern intern) {
         ObjectMapper mapper = new ObjectMapper();
         if(!intern.isEmpty()) {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(intern);
-        } else {
-            return null;
+            try {
+                return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(intern);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
+        return null;
     }
 }
