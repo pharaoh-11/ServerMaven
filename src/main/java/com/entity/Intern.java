@@ -7,6 +7,9 @@ public class Intern extends Entity {
     private String email;
     private int groupId;
 
+    public Intern() {
+    }
+
     public void setId(int id) {
         this.id = id;
     }

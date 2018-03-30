@@ -1,7 +1,6 @@
 package com.server.router;
 
 import com.data.Request;
-import com.exception.NoSuchRoutException;
 import com.server.Rout;
 import com.handlers.Handler;
 import com.server.RequestMethods;
@@ -12,6 +11,7 @@ import java.util.Map;
 
 public class Router {
     Map<RequestMethods, ArrayList<Rout>> handlers;
+    Rout defaultRout;
 
     public Router() {
         handlers = new HashMap<>();
@@ -23,24 +23,27 @@ public class Router {
     }
 
     public void addNewRout(RequestMethods method, String path, Handler handler) {
-        handlers.get(method).add(new Rout(method, path, handler));
+        if(method != null) {
+            handlers.get(method).add(new Rout(method, path, handler));
+        } else {
+            defaultRout = new Rout(method, path, handler);
+        }
     }
 
-    public Rout findNeededRout(Request request) throws NoSuchRoutException {
+    public Rout findNeededRout(Request request) {
         for(Rout rout: handlers.get(request.getMethod())) {
             if(makeCorrespondRoutPathToCheck(rout.getPath()).equals(makeCorrespondRequestPathToCheck(request.getPath()))) {
                 return rout;
             }
         }
-        //not found concreteHandler
-        throw new NoSuchRoutException();
+        return defaultRout;
     }
 
     String makeCorrespondRequestPathToCheck(String path) {
         return path.replaceAll("/\\d*/", "/:/");
     }
 
-    String makeCorrespondRoutPathToCheck(String path) {
+    private String makeCorrespondRoutPathToCheck(String path) {
         return path.replaceAll("/:\\w*/", "/:/");
     }
 }

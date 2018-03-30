@@ -2,6 +2,8 @@ package com.server.controller.db;
 
 import com.entity.Group;
 import com.entity.Intern;
+import com.server.controller.JsonReader;
+
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -31,12 +33,12 @@ public class MemoryDataBase implements DataBase {
     }
 
     @Override
-    public ArrayList<Intern> getAllInterns() {
+    public ArrayList<Intern> selectAllInterns() {
         return internList;
     }
 
     @Override
-    public Intern getInternsById(int id) {
+    public Intern selectInternsById(int id) {
         for(Intern intern : internList) {
             if(intern.getId() == id) {
                 return intern;
@@ -46,7 +48,7 @@ public class MemoryDataBase implements DataBase {
     }
 
     @Override
-    public boolean postIntern(Intern intern) {
+    public boolean insertIntern(Intern intern) {
         intern.setId(getAnotherID());
         internList.add(intern);
         return true;
@@ -64,7 +66,7 @@ public class MemoryDataBase implements DataBase {
     }
 
     @Override
-    public boolean patchIntern(Intern intern) {
+    public boolean updateIntern(Intern intern) {
         Intern internInList;
         for(ListIterator<Intern> iterator = internList.listIterator(); iterator.hasNext(); ) {
             internInList = iterator.next();
@@ -77,7 +79,7 @@ public class MemoryDataBase implements DataBase {
     }
 
     @Override
-    public ArrayList<Group> getGroups() {
+    public ArrayList<Group> selectGroups() {
         return groupList;
     }
 }

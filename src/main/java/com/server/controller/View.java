@@ -20,7 +20,7 @@ public class View {
 
     public static String viewBody(Intern intern) {
         ObjectMapper mapper = new ObjectMapper();
-        if(!intern.isEmpty()) {
+        if(intern != null && !intern.isEmpty()) {
             try {
                 return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(intern);
             } catch (JsonProcessingException e) {

@@ -26,11 +26,11 @@ public class Controller {
     }
 
     public Response getAllInterns(Request request) {
-        return getResponseBody(new Response(), dataBase.getAllInterns());
+        return getResponseBody(new Response(), dataBase.selectAllInterns());
     }
 
     public Response getGroups(Request request) {
-        return getResponseBody(new Response(), dataBase.getGroups());
+        return getResponseBody(new Response(), dataBase.selectGroups());
     }
 
     private Response getResponseBody(Response response, ArrayList<? extends Entity> list) {
@@ -43,7 +43,7 @@ public class Controller {
     public Response getInternById(Request request) {
         Response response = new Response();
         int id = request.getQuery().get("interns");
-        response.setBody(View.viewBody(dataBase.getInternsById(id)));
+        response.setBody(View.viewBody(dataBase.selectInternsById(id)));
 
         if (response.isBodyNull()) {
             return send404();
@@ -62,7 +62,7 @@ public class Controller {
 
     public Response postNewIntern(Request request) {
         Intern intern = createInternFromRequest(request);
-        if (dataBase.postIntern(intern)) {
+        if (dataBase.insertIntern(intern)) {
             return successfulDataUpdate();
         } else {
             return failedDataUpdate();
@@ -98,10 +98,9 @@ public class Controller {
         Intern intern = createInternFromRequest(request);
         int id = request.getQuery().get("interns");
         intern.setId(id);
-        if(dataBase.patchIntern(intern)) {
+        if (dataBase.updateIntern(intern)) {
             return successfulDataUpdate();
-        }
-        else {
+        } else {
             return failedDataUpdate();
         }
     }
@@ -109,11 +108,10 @@ public class Controller {
     public Response delete(Request request) {
         Response response = new Response();
         int id = request.getQuery().get("interns");
-        if(dataBase.deleteIntern(id)) {
+        if (dataBase.deleteIntern(id)) {
             response.setHead(responseHead.getResponseHead(ResponseStatus.S202));
             LOG.info("Intern was deleted");
-        }
-        else {
+        } else {
             response.setHead(responseHead.getResponseHead(ResponseStatus.S400));
             LOG.error("Intern was not deleted");
         }
@@ -139,7 +137,7 @@ public class Controller {
         return response;
     }
 
-    public Response routDoesNotExist(Request request) {
+    public Response defaultRout(Request request) {
         return send404();
     }
 }

@@ -4,6 +4,8 @@ import com.entity.Entity;
 import com.entity.Group;
 import com.entity.Intern;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -39,7 +41,7 @@ public class SQLDataBase implements DataBase {
     }
 
     @Override
-    public ArrayList<Intern> getAllInterns() {
+    public ArrayList<Intern> selectAllInterns() {
         ArrayList<Intern> interns = new ArrayList<>();
         Intern intern;
         try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_INTERNS)) {
@@ -51,9 +53,32 @@ public class SQLDataBase implements DataBase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+//        return selectItems(SELECT_ALL_INTERNS, interns, Intern.class);
         return interns;
     }
+
+//    private <T extends Entity> ArrayList<T> selectItems(String itemQuery, ArrayList<T> list, Class<T> className) {
+//        try(PreparedStatement preparedStatement = connection.prepareStatement(itemQuery)) {
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            Constructor<T> con = className.getDeclaredConstructor(className);
+//            T item = (T) con.newInstance();
+//            while(resultSet.next()) {
+//                item = (T) createIntern(resultSet);
+//                list.add(item);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
 
     private Intern createIntern(ResultSet resultSet) throws SQLException {
         Intern intern = new Intern();
@@ -66,8 +91,8 @@ public class SQLDataBase implements DataBase {
     }
 
     @Override
-    public Intern getInternsById(int id) {
-        Intern intern = new Intern();
+    public Intern selectInternsById(int id) {
+        Intern intern = null;
         try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_INTERN_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -82,21 +107,24 @@ public class SQLDataBase implements DataBase {
     }
 
     @Override
-    public boolean postIntern(Intern intern) {
+    public boolean insertIntern(Intern intern) {
         try(PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTERN)) {
-            preparedStatement.setInt(1, intern.getId());
-            preparedStatement.setString(2, intern.getFirstName());
-            preparedStatement.setString(3, intern.getLastName());
-            preparedStatement.setString(4, intern.getEmail());
-            preparedStatement.setInt(5, intern.getGroupId());
-
-            if(preparedStatement.executeUpdate() > 0) {
+            if(prepareInsert(preparedStatement, intern).executeUpdate() > 0) {
                 return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private PreparedStatement prepareInsert(PreparedStatement preparedStatement, Intern intern) throws SQLException {
+        preparedStatement.setInt(1, intern.getId());
+        preparedStatement.setString(2, intern.getFirstName());
+        preparedStatement.setString(3, intern.getLastName());
+        preparedStatement.setString(4, intern.getEmail());
+        preparedStatement.setInt(5, intern.getGroupId());
+        return preparedStatement;
     }
 
     @Override
@@ -114,15 +142,9 @@ public class SQLDataBase implements DataBase {
     }
 
     @Override
-    public boolean patchIntern(Intern intern) {
+    public boolean updateIntern(Intern intern) {
         try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_INTERN)) {
-            preparedStatement.setString(1, intern.getFirstName());
-            preparedStatement.setString(2, intern.getLastName());
-            preparedStatement.setString(3, intern.getEmail());
-            preparedStatement.setInt(4, intern.getGroupId());
-            preparedStatement.setInt(5, intern.getId());
-
-            if(preparedStatement.executeUpdate() > 0) {
+            if(prepareUpdate(preparedStatement, intern).executeUpdate() > 0) {
                 return true;
             }
         } catch (SQLException e) {
@@ -131,8 +153,17 @@ public class SQLDataBase implements DataBase {
         return false;
     }
 
+    private PreparedStatement prepareUpdate(PreparedStatement preparedStatement, Intern intern) throws SQLException {
+        preparedStatement.setString(1, intern.getFirstName());
+        preparedStatement.setString(2, intern.getLastName());
+        preparedStatement.setString(3, intern.getEmail());
+        preparedStatement.setInt(4, intern.getGroupId());
+        preparedStatement.setInt(5, intern.getId());
+        return preparedStatement;
+    }
+
     @Override
-    public ArrayList<Group> getGroups() {
+    public ArrayList<Group> selectGroups() {
         ArrayList<Group> groups = new ArrayList<>();
         Group group;
         try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_GROUPS)) {

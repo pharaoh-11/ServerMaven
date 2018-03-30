@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        Controller controller = new Controller(new MemoryDataBase());
+        Controller controller = new Controller(new SQLDataBase());
         Router router = new Router();
 
         router.addNewRout(RequestMethods.GET, "/interns/", controller::getAllInterns);
@@ -23,6 +23,7 @@ public class Main {
         router.addNewRout(RequestMethods.OPTIONS, "/interns/:id/", controller::options);
         router.addNewRout(RequestMethods.DELETE, "/interns/:id/", controller::delete);
         router.addNewRout(RequestMethods.PATCH, "/interns/:id/", controller::patch);
+        router.addNewRout(null, null, controller::defaultRout);
 
         Server server = new Server(router);
         server.listenPort();

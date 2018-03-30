@@ -1,4 +1,4 @@
-package com.server.controller.db;
+package com.server.controller;
 
 import com.entity.Entity;
 import com.entity.Group;
