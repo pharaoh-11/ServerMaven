@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class Parser {
+    private static final int METHOD = 0;
+    private static final int PATH = 1;
+
     private static final Logger LOG = Logger.getLogger(Parser.class);
 
     private static Request request;
@@ -28,9 +31,9 @@ public class Parser {
     }
 
     static Request parseFirstLine(String firstString, Request request) {
-        String method = firstString.split(" ")[0];
+        String method = firstString.split(" ")[METHOD];
         request.setMethod(RequestMethods.checkMethods(method));
-        String path = firstString.split(" ")[1];
+        String path = firstString.split(" ")[PATH];
         request.setPath(addSlashToEnding(path));
         if(path.split("/").length > 2) {
             String[] partOfPath = path.split("/");

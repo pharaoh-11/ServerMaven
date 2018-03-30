@@ -1,8 +1,8 @@
 package com.server.router;
 
 import com.data.Request;
-import com.exception.NoSuchHandlerException;
-import com.handlers.ConcreteHandler;
+import com.exception.NoSuchRoutException;
+import com.server.Rout;
 import com.server.RequestMethods;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,52 +15,52 @@ class RouterTest {
     @BeforeAll
     static void setUp() {
         router = new Router();
-        router.addNewHandler(RequestMethods.GET, "/interns/", null);
-        router.addNewHandler(RequestMethods.POST, "/interns/:pId/", null);
-        router.addNewHandler(RequestMethods.OPTIONS, "/interns/:id/", null);
-        router.addNewHandler(RequestMethods.DELETE, "/interns/:number/", null);
-        router.addNewHandler(RequestMethods.PATCH, "/interns/:firstId/body/:secondId/", null);
+        router.addNewRout(RequestMethods.GET, "/interns/", null);
+        router.addNewRout(RequestMethods.POST, "/interns/:pId/", null);
+        router.addNewRout(RequestMethods.OPTIONS, "/interns/:id/", null);
+        router.addNewRout(RequestMethods.DELETE, "/interns/:number/", null);
+        router.addNewRout(RequestMethods.PATCH, "/interns/:firstId/body/:secondId/", null);
     }
 
     @Test
-    void findNeededHandler() throws NoSuchHandlerException {
+    void findNeededHandler() throws NoSuchRoutException {
         Request request = new Request();
         request.setMethod(RequestMethods.GET);
         request.setPath("/interns/");
-        ConcreteHandler cHandler = new ConcreteHandler(RequestMethods.GET, "/interns/", null);
-        assertEquals(cHandler, router.findNeededHandler(request));
+        Rout cHandler = new Rout(RequestMethods.GET, "/interns/", null);
+        assertEquals(cHandler, router.findNeededRout(request));
 
         request = new Request();
         request.setMethod(RequestMethods.POST);
         request.setPath("/interns/2/");
-        cHandler = new ConcreteHandler(RequestMethods.POST, "/interns/:pId/", null);
-        assertEquals(cHandler, router.findNeededHandler(request));
+        cHandler = new Rout(RequestMethods.POST, "/interns/:pId/", null);
+        assertEquals(cHandler, router.findNeededRout(request));
 
         request = new Request();
         request.setMethod(RequestMethods.OPTIONS);
         request.setPath("/interns/13/");
-        cHandler = new ConcreteHandler(RequestMethods.OPTIONS, "/interns/:id/", null);
-        assertEquals(cHandler, router.findNeededHandler(request));
+        cHandler = new Rout(RequestMethods.OPTIONS, "/interns/:id/", null);
+        assertEquals(cHandler, router.findNeededRout(request));
 
         request = new Request();
         request.setMethod(RequestMethods.DELETE);
         request.setPath("/interns/1/");
-        cHandler = new ConcreteHandler(RequestMethods.DELETE, "/interns/:number/", null);
-        assertEquals(cHandler, router.findNeededHandler(request));
+        cHandler = new Rout(RequestMethods.DELETE, "/interns/:number/", null);
+        assertEquals(cHandler, router.findNeededRout(request));
 
         request = new Request();
         request.setMethod(RequestMethods.PATCH);
         request.setPath("/interns/2/body/22/");
-        cHandler = new ConcreteHandler(RequestMethods.PATCH, "/interns/:id/body/:id/", null);
-        assertEquals(cHandler, router.findNeededHandler(request));
+        cHandler = new Rout(RequestMethods.PATCH, "/interns/:id/body/:id/", null);
+        assertEquals(cHandler, router.findNeededRout(request));
     }
 
     @Test
     void makeCorrespondPathToCheck() {
         String answer = "/interns/:/";
-        assertEquals(answer, router.makeCorrespondPathToCheck("/interns/2/"));
+        assertEquals(answer, router.makeCorrespondRequestPathToCheck("/interns/2/"));
 
         answer = "/groups/:/";
-        assertEquals(answer, router.makeCorrespondPathToCheck("/groups/12/"));
+        assertEquals(answer, router.makeCorrespondRequestPathToCheck("/groups/12/"));
     }
 }

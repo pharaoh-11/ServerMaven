@@ -1,19 +1,19 @@
-package com.handlers;
+package com.server;
 
 import com.data.Request;
 import com.data.Response;
-import com.server.RequestMethods;
+import com.handlers.Handler;
 
 import java.util.Objects;
 
-public class ConcreteHandler {
+public class Rout {
     private RequestMethods requestMethods;
     private String path;
     private Handler handler;
 
-    public ConcreteHandler(RequestMethods requestMethods, String path, Handler handler) {
+    public Rout(RequestMethods requestMethods, String path, Handler handler) {
         this.requestMethods = requestMethods;
-        this.path = path.replaceAll("/:\\w*/", "/:/");
+        this.path = path;
         this.handler = handler;
     }
 
@@ -29,7 +29,7 @@ public class ConcreteHandler {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ConcreteHandler that = (ConcreteHandler) o;
+        Rout that = (Rout) o;
         return requestMethods == that.requestMethods &&
                 Objects.equals(path, that.path) &&
                 Objects.equals(handler, that.handler);

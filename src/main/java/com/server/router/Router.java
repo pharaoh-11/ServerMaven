@@ -1,8 +1,8 @@
 package com.server.router;
 
 import com.data.Request;
-import com.exception.NoSuchHandlerException;
-import com.handlers.ConcreteHandler;
+import com.exception.NoSuchRoutException;
+import com.server.Rout;
 import com.handlers.Handler;
 import com.server.RequestMethods;
 
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Router {
-    Map<RequestMethods, ArrayList<ConcreteHandler>> handlers;
+    Map<RequestMethods, ArrayList<Rout>> handlers;
 
     public Router() {
         handlers = new HashMap<>();
@@ -22,21 +22,25 @@ public class Router {
         handlers.put(RequestMethods.OPTIONS, new ArrayList<>());
     }
 
-    public void addNewHandler(RequestMethods method, String path, Handler handler) {
-        handlers.get(method).add(new ConcreteHandler(method, path, handler));
+    public void addNewRout(RequestMethods method, String path, Handler handler) {
+        handlers.get(method).add(new Rout(method, path, handler));
     }
 
-    public ConcreteHandler findNeededHandler(Request request) throws NoSuchHandlerException {
-        for(ConcreteHandler handler: handlers.get(request.getMethod())) {
-            if(handler.getPath().equals(makeCorrespondPathToCheck(request.getPath()))) {
-                return handler;
+    public Rout findNeededRout(Request request) throws NoSuchRoutException {
+        for(Rout rout: handlers.get(request.getMethod())) {
+            if(makeCorrespondRoutPathToCheck(rout.getPath()).equals(makeCorrespondRequestPathToCheck(request.getPath()))) {
+                return rout;
             }
         }
         //not found concreteHandler
-        throw new NoSuchHandlerException();
+        throw new NoSuchRoutException();
     }
 
-    String makeCorrespondPathToCheck(String path) {
+    String makeCorrespondRequestPathToCheck(String path) {
         return path.replaceAll("/\\d*/", "/:/");
+    }
+
+    String makeCorrespondRoutPathToCheck(String path) {
+        return path.replaceAll("/:\\w*/", "/:/");
     }
 }

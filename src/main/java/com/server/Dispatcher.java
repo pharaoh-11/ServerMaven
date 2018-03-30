@@ -2,12 +2,11 @@ package com.server;
 
 import com.data.Request;
 import com.data.Response;
-import com.exception.NoSuchHandlerException;
+import com.exception.NoSuchRoutException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.handlers.ConcreteHandler;
 import com.server.router.Router;
 import org.apache.log4j.Logger;
 
@@ -23,16 +22,16 @@ public class Dispatcher {
     }
 
     public Response handleRequest(Request request) {
-        ConcreteHandler concreteHandler;
+        Rout rout;
         Response response;
         try {
-            concreteHandler = router.findNeededHandler(request);
+            rout = router.findNeededRout(request);
             LOG.info("Dispatcher received correspond handler");
-        } catch (NoSuchHandlerException e) {
+        } catch (NoSuchRoutException e) {
             LOG.error("Handler for accepted request doesn't exist");
             return send500();
         }
-        response = concreteHandler.handleQuery(request);
+        response = rout.handleQuery(request);
         return response;
     }
 

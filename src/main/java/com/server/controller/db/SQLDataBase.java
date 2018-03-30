@@ -1,5 +1,6 @@
 package com.server.controller.db;
 
+import com.entity.Entity;
 import com.entity.Group;
 import com.entity.Intern;
 
@@ -44,12 +45,7 @@ public class SQLDataBase implements DataBase {
         try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_INTERNS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                intern = new Intern();
-                intern.setId(resultSet.getInt(ID));
-                intern.setFirstName(resultSet.getString(FIRST_NAME));
-                intern.setLastName(resultSet.getString(LAST_NAME));
-                intern.setEmail(resultSet.getString(EMAIL));
-                intern.setGroupId(resultSet.getInt(GROUP_ID));
+                intern = createIntern(resultSet);
                 interns.add(intern);
             }
         } catch (SQLException e) {
@@ -59,6 +55,16 @@ public class SQLDataBase implements DataBase {
         return interns;
     }
 
+    private Intern createIntern(ResultSet resultSet) throws SQLException {
+        Intern intern = new Intern();
+        intern.setId(resultSet.getInt(ID));
+        intern.setFirstName(resultSet.getString(FIRST_NAME));
+        intern.setLastName(resultSet.getString(LAST_NAME));
+        intern.setEmail(resultSet.getString(EMAIL));
+        intern.setGroupId(resultSet.getInt(GROUP_ID));
+        return intern;
+    }
+
     @Override
     public Intern getInternsById(int id) {
         Intern intern = new Intern();
@@ -66,11 +72,7 @@ public class SQLDataBase implements DataBase {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                intern.setId(resultSet.getInt(ID));
-                intern.setFirstName(resultSet.getString(FIRST_NAME));
-                intern.setLastName(resultSet.getString(LAST_NAME));
-                intern.setEmail(resultSet.getString(EMAIL));
-                intern.setGroupId(resultSet.getInt(GROUP_ID));
+                intern = createIntern(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,11 +138,7 @@ public class SQLDataBase implements DataBase {
         try(PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_GROUPS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                group = new Group();
-                group.setId(resultSet.getInt(ID));
-                group.setName(resultSet.getString(NAME));
-                group.setPeriodStart(resultSet.getString(PERIOD_START));
-                group.setPeriodFinish(resultSet.getString(PERIOD_FINISH));
+                group = createGroup(resultSet);
                 groups.add(group);
             }
         } catch (SQLException e) {
@@ -148,5 +146,14 @@ public class SQLDataBase implements DataBase {
         }
 
         return groups;
+    }
+
+    private Group createGroup(ResultSet resultSet) throws SQLException {
+        Group group = new Group();
+        group.setId(resultSet.getInt(ID));
+        group.setName(resultSet.getString(NAME));
+        group.setPeriodStart(resultSet.getString(PERIOD_START));
+        group.setPeriodFinish(resultSet.getString(PERIOD_FINISH));
+        return group;
     }
 }

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.server.controller.db.DataBase;
-import com.server.controller.db.MemoryDataBase;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -34,9 +33,8 @@ public class Controller {
 
     private DataBase dataBase;
 
-    public Controller() {
-//        dataBase = new SQLDataBase();
-        dataBase = new MemoryDataBase();
+    public Controller(DataBase dataBase) {
+        this.dataBase = dataBase;
     }
 
     public Response getAllInterns(Request request) {
@@ -163,5 +161,9 @@ public class Controller {
 
         response.setHead(RESPONSE_404);
         return response;
+    }
+
+    public Response routDoesNotExist(Request request) {
+        return send404();
     }
 }
